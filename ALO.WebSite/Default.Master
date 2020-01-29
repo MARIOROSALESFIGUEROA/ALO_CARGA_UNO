@@ -1,0 +1,653 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Default.master.cs" Inherits="ALO.WebSite.Default" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+
+
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Expires" content="0" />
+    <meta http-equiv="Last-Modified" content="0" />
+    <meta http-equiv="Cache-Control" content="no-cache, mustrevalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <link rel="icon" href="favicon.ico" />
+    <title>CARGA</title>
+
+    <%=JSLink("~/lib/jquery-1-6-4/jquery-1.6.4.min.js")%>
+    <%--<%=JSLink("~/lib/jquery-1-6-4/jquery-1.6.4.min.js")%>--%>
+    <script>
+        var $jq = jQuery.noConflict();
+    </script>
+    <%= JSLink("~/js/jquery.signalR-2.2.2.min.js") %>
+    <%= JSLink("~/signalr/hubs")%>
+
+
+
+    <%=CSSLink("~/lib/bootstrap-3.3.7/css/bootstrap.min.css")%>
+    <%=CSSLink("~/lib/font-awesome-4.7.0/css/font-awesome.min.css")%>
+    <%=CSSLink("~/lib/jquery-ui-1.12.1.custom/jquery-ui.min.css")%>
+    <%=CSSLink("~/lib/bootstrap-select/css/bootstrap-select.css")%>
+    <%=CSSLink("~/lib/Datatables/css/dataTables.bootstrap.css")%>
+    <%=CSSLink("~/lib/notifyjs/styles/metro/notify-metro.css")%>
+    <%=CSSLink("~/lib/Multiselect/css/bootstrap-multiselect.css")%>
+    <%=CSSLink("~/css/Default.css")%>
+
+    <%=JSLink("~/lib/jquery-3.2.0/jquery-3.2.0.min.js")%>
+    <%=JSLink("~/lib/bootstrap-3.3.7/js/bootstrap.min.js")%>
+    <%=JSLink("~/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js")%>
+    <%=JSLink("~/lib/Datatables/js/jquery.dataTables.min.js")%>
+    <%=JSLink("~/lib/Datatables/js/dataTables.bootstrap.js")%>
+    <%=JSLink("~/lib/bootstrap-select/js/bootstrap-select.js")%>
+    <%=JSLink("~/lib/notifyjs/notify.js")%>
+    <%=JSLink("~/lib/notifyjs/styles/metro/notify-metro.js")%>
+    <%=JSLink("~/lib/Multiselect/js/bootstrap-multiselect.js")%>
+    <%=JSLink("~/lib/datetimepicker/js/datetimepicker-espanol.js")%>
+
+    <!-- ===============================================================================================================================-->
+    <!-- ESTILOS                                                                                                                        -->
+    <!-- ===============================================================================================================================-->
+    <style type="text/css">
+        .CenterPB {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -30px; /* make this half your image/element height */
+            margin-left: -30px; /* make this half your image/element width */
+        }
+
+        .overlay {
+            position: absolute;
+            background-color: white;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+            -moz-opacity: 0.8;
+            filter: alpha(opacity=30);
+            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+            z-index: 10000;
+            bottom: 462px;
+        }
+    </style>
+    <!-- ===============================================================================================================================-->
+    <!-- FIN ESTILOS                                                                                                                    -->
+    <!-- ===============================================================================================================================-->
+
+    <!-- ===============================================================================================================================-->
+    <!-- SCRIPT                                                                                                                         -->
+    <!-- ===============================================================================================================================-->
+    <script type="text/javascript">
+
+        function UPPER() {
+
+        }
+
+
+        //======================================================================================
+        // PANTALLA MODIFICAR GRILLA                                                               
+        //======================================================================================
+        function FormularioModalJS(CONTENEDOR, DIV_INFO, DIV_ALERTA) {
+
+
+
+            var Objeto = document.getElementById(CONTENEDOR)
+            //=================================================================
+            // MOSTRAR INFORMACION MODAL                                     
+            //=================================================================
+            document.getElementById(DIV_ALERTA).style.display = "none";
+            document.getElementById(DIV_INFO).style.display = "none";
+            $(Objeto).modal("show");
+
+
+        }
+
+        //======================================================================================
+        // LEVANTAR PAGINA                                                     
+        //======================================================================================
+        function Levantar_Page(URL) {
+
+
+            //=============================================================
+            // LEVANTAR PAGINA                                
+            //=============================================================
+            window.open(URL, '');
+
+
+        }
+
+
+
+        //======================================================================================
+        // MENSAJE LOG POR PANTALLA                                                           ==
+        //======================================================================================
+        function MensajeLOG(Titulo) {
+
+
+            //=================================================================
+            // CAMBIO TITULO DEL MODAL                                    
+            //=================================================================
+            $("#TituloModal").html(Titulo);
+
+            //=================================================================
+            // RELLENO LOS DATOS                                    
+            //=================================================================
+            var ObjetoServer = document.getElementById("<%=LOG_MENSAJE_SERVER.ClientID%>");
+            $("#LOG_MENSAJE_DIALOG").html(ObjetoServer.innerHTML);
+
+            //=================================================================
+            // MOSTRAR INFORMACION MODAL                                    
+            //=================================================================
+            $("#mostrarmodal").modal("show");
+            ObjetoServer.innerHTML = '';
+
+
+
+        }
+
+
+        //======================================================================================
+        // MENSAJE LOG EN EDICION DE GRILLA                                                               
+        //======================================================================================
+        function MensajeLOGEdit(Opcion, DIV_INFO, DIV_ALERTA) {
+
+
+            //=================================================================
+            // MENSAJE                                    
+            //=================================================================
+            var ObjetoServer = document.getElementById("<%=LOG_MENSAJE_SERVER.ClientID%>");
+
+
+            //=================================================================
+            // MOSTRAR MENSAJES DE LA OPERACION                                    
+            //=================================================================
+            if (Opcion == "A") {
+
+                var Objeto = document.getElementById(DIV_ALERTA);
+                document.getElementById(DIV_ALERTA).style.display = "block";
+                document.getElementById(DIV_INFO).style.display = "none";
+                $(Objeto).html(ObjetoServer.innerHTML);
+            }
+            if (Opcion == "I") {
+
+                var Objeto = document.getElementById(DIV_INFO);
+                document.getElementById(DIV_ALERTA).style.display = "none";
+                document.getElementById(DIV_INFO).style.display = "block";
+                $(Objeto).html(ObjetoServer.innerHTML);
+            }
+
+            ObjetoServer.innerHTML = '';
+        }
+
+
+        //======================================================================================
+        // MOSTRAR DETALLE DE MENSAJE  EN EL POPUP DE ERRORES                                 ==
+        //======================================================================================
+        function MostrarThrow() {
+            document.getElementById("OcultoThrowError").style.display = "block";
+            document.getElementById("IMG_MostrarError").style.display = "none";
+            document.getElementById("IMG_OcultarError").style.display = "block";
+
+        }
+        function OcultarThrow() {
+            document.getElementById("OcultoThrowError").style.display = "none";
+            document.getElementById("IMG_MostrarError").style.display = "block";
+            document.getElementById("IMG_OcultarError").style.display = "none";
+        }
+
+
+        //======================================================================================
+        // GRILLA DE METODOS                                                                  ==
+        //======================================================================================
+        function setCookie(nombre, valor, caducidad) {
+
+            //=================================================================
+            //  SI NO HAY CADUCIDAD LA DEFINIMOS A 31 DIAS                                                       
+            //=================================================================
+            if (!caducidad)
+                caducidad = 31
+
+
+            //=================================================================
+            //  FECHA ACTUAL                                                           
+            //=================================================================
+            var expireDate = new Date() //coge la fecha actual
+            expireDate.setDate(expireDate.getDate() + caducidad);
+
+
+            //=================================================================
+            //  CADA VALOR SEPARADO ;                                                          
+            //=================================================================
+            document.cookie = nombre + "=" + escape(valor) + "; expires=" + expireDate.toGMTString();
+
+        }
+
+        //======================================================================================
+        // LEER COOKIE                                                                        ==
+        //======================================================================================
+        function getCookie(nombre) {
+
+
+
+            //=================================================================
+            //  LARGO DE COOKIE                                                           
+            //=================================================================
+            if (document.cookie.length > 0) {
+
+
+                /*
+				* indexOf(caracter,desde) Devuelve la primera posicion que el caracter aparece
+				* devuelve -1 si no encuentra el caracter
+				*/
+
+                start = document.cookie.indexOf(nombre + "=");
+
+
+                if (start != -1) {
+                    //El inicio de la cookie, el nombre de la cookie mas les simbolo '='
+                    start = start + nombre.length + 1;
+                    //Buscamos el final de la cookie (es el simbolo ';')
+                    end = document.cookie.indexOf(";", start);
+                    //Si no encontramos el simbolo del final ';', el final sera el final de la cookie.
+                    if (end == -1)
+                        end = document.cookie.length;
+                    //Devolvemos el contenido de la cookie.
+                    //substring(start,end) devuelve la cadena entre el valor mas bajo y
+                    //el mas alto, indiferentemente de la posicion.
+                    return unescape(document.cookie.substring(start, end));
+                }
+            }
+            //no hemos encontrado la cookie
+            return "";
+        }
+
+
+        //======================================================================================
+        // SIGNALR	==
+        //======================================================================================
+        var proxy = $jq.connection.messageHub;
+        $jq(function () {
+
+
+            //=================================================================
+            // NOTIFICACION DE LA INTERFAZ CREADA POR SIGNALR                                    
+            //=================================================================
+            proxy.client.receivenotification = function (LOGIN, MENSAJE, SISTEMA) {
+
+
+
+
+                //=========================================================
+                // MENSAJE ENVIADO 
+                //=========================================================
+                MSG('metro', MENSAJE);
+
+
+
+
+                //=========================================================
+                // DECLARACION DE VARIABLES 
+                //=========================================================
+                var Pathname = window.location.pathname;
+                var Matriz = Pathname.split("/");
+                var Pagina = Matriz[Matriz.length - 1]
+
+                console.log("USTED ESTA ALOJADO EN LA PAGINA " + Pagina);
+                console.log("<%= ResolveUrl("~/") %>");
+
+
+
+
+
+
+
+            }
+            $jq.connection.hub.start().done();
+
+        });
+
+
+
+        $.extend(
+        {
+            redirectPost: function (location, args) {
+                var form = $('<form>', { action: location, method: 'post' });
+                $.each(args,
+                     function (key, value) {
+                         $(form).append(
+                              $('<input>', { type: 'hidden', name: key, value: value })
+                         );
+                     });
+                $(form).appendTo('body').submit();
+            }
+
+
+
+
+        });
+
+        $.extend(
+        {
+            redirectPostWinOpen: function (location, winName, args) {
+                var form = $('<form>', { action: location, method: 'post', 'target': winName });
+                $.each(args,
+                     function (key, value) {
+                         $(form).append(
+                              $('<input>', { type: 'hidden', name: key, value: value })
+                         );
+                     });
+
+                $('body').append(form);
+                window.open(location, winName, '');
+                form.target = winName;
+                form.submit();
+
+            }
+
+
+
+
+        });
+
+
+
+        //======================================================================================
+        // MENSAJES DE NOTIFICACION                                                           ==
+        //======================================================================================
+        function MSG(style, Mensaje) {
+            $.notify({
+                title: 'RECEPCION DE ENTRADA',
+                text: Mensaje,
+                image: "<img src='<%=Href("~/images/Mail.png")%>'/>"
+            }, {
+                style: 'metro',
+                className: style,
+                autoHide: true,
+                clickToHide: true,
+                autoHideDelay: 10000
+            });
+        }
+
+
+
+        //======================================================================================
+        // LEVANTAR PAGINA DE LEARNING
+        //======================================================================================
+        function Levantar_Page_Learning(urlFinal, CODIGO, COLA, NameForm) {
+
+            //console.log(urlFinal, CODIGO, COLA, NameForm)
+            $.redirectPostWinOpen(urlFinal, NameForm, { 'CODIGO': CODIGO, 'COLA': COLA });
+
+        }
+
+        //======================================================================================
+        // REALIZA POSTBACK
+        //======================================================================================
+        function postBack() {
+            var element = window.event.srcElement;
+            if (element.tagName == "INPUT" && element.type == "checkbox") {
+                __doPostBack("", "");
+            }
+        }
+
+    </script>
+    <!-- ===============================================================================================================================-->
+    <!-- FIN SCRIPT                                                                                                                     -->
+    <!-- ===============================================================================================================================-->
+
+
+
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+
+
+
+</head>
+<body>
+
+
+    <form id="form1" runat="server">
+
+
+        <asp:ScriptManager ID="ScriptManager1" ScriptMode="Release" runat="server" EnablePageMethods="True" EnableScriptGlobalization="true">
+        </asp:ScriptManager>
+
+        <!-- ===========================================================================================================================-->
+        <!-- NAVEGADOR                                                                                                                  -->
+        <!-- ===========================================================================================================================-->
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href='<%=ResolveClientUrl("Home") %>'>
+
+                        <img style="max-width: 230px; margin-top: -7px; margin-left: 0px; height: 60px" alt="Logo"
+                            src='<%=Href("~/images/LOGO_A.png")%>' />
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav">
+
+                        <!-- =========================================-->
+                        <!-- MENU HOME						   		  -->
+                        <!-- =========================================-->
+                        <li><a href='<%=ResolveClientUrl("Home") %>'><i class="fa fa-home"></i>HOME</a></li>
+
+
+                        <!-- =========================================-->
+                        <!-- MENU INTERFAZ                            -->
+                        <!-- =========================================-->
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fas fa-sitemap"></i>&nbsp; GRUPOS DE CARGA <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href='<%=ResolveClientUrl("GRUPO/GRUPO_CLUSTER") %>'>Grupos a Cluster</a></li>
+                                <li class="divider"></li>
+                                <li><a href='<%=ResolveClientUrl("GRUPO/GRUPO_LOGIN") %>'>Grupos a Usuarios</a></li>
+                                <li class="divider"></li>
+                            </ul>
+                        </li>
+
+
+                        <!-- =========================================-->
+                        <!-- MENU INTERFAZ                            -->
+                        <!-- =========================================-->
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fas fa-sitemap"></i> &nbsp; INTERFAZ <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href='<%=ResolveClientUrl("INTERFAZ/INTERFAZ") %>'>Creación de Interfaz</a></li>
+                                <li class="divider"></li>
+                                <li><a href='<%=ResolveClientUrl("INTERFAZ/SALIDA") %>'>Asociar Procesos a Interfaz</a></li>
+                                <li class="divider"></li>
+                                <li><a href='<%=ResolveClientUrl("INTERFAZ/ASIGNACION") %>'>Asignar Columnas Interfaz y Archivo</a></li>
+                                <li class="divider"></li>
+                            </ul>
+                        </li>
+
+                        <!-- =========================================-->
+                        <!-- MENU INTERFAZ                            -->
+                        <!-- =========================================-->
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fas fa-sitemap"></i> &nbsp; CLAVES VALOR<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href='<%=ResolveClientUrl("OBJETO/OBJETO") %>'>Creación de Claves</a></li>
+                                <li class="divider"></li>
+                                <li><a href='<%=ResolveClientUrl("OBJETO/OBJETO_INTERFAZ") %>'>Asignación de Claves</a></li>
+                                <li class="divider"></li>
+                            </ul>
+                        </li>
+
+
+                        <!-- =========================================-->
+                        <!-- MENU EJECUCION                           -->
+                        <!-- =========================================-->
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fas fa-sitemap"></i>&nbsp; EJECUCIONES <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href='<%=ResolveClientUrl("GRUPO_CARGA/GRUPO_CARGA") %>'>Configuración de Proceso</a></li>
+                                <li class="divider"></li>
+                                <li><a href='<%=ResolveClientUrl("EJECUCION/EJECUCION") %>'>Ejecución de Proceso Archivo</a></li>
+                                <li class="divider"></li>
+                                <li><a href='<%=ResolveClientUrl("EJECUCION/SOLICITUD") %>'>Ejecución de Solicitud Carga</a></li>
+                                <li class="divider"></li>
+                            </ul>
+                        </li>
+
+                        <!-- =========================================-->
+                        <!-- MENU PROCESO                           -->
+                        <!-- =========================================-->
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fas fa-sitemap"></i> &nbsp;PROCESOS DB<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href='<%=ResolveClientUrl("PROCESO/WHO2") %>'>SP_WHO2</a></li>
+                                <li class="divider"></li>
+                            </ul>
+                        </li>
+
+
+                        <!-- =========================================-->
+                        <!-- MENU MANTENEDORES                         -->
+                        <!-- =========================================-->
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fas fa-sitemap"></i> &nbsp; MANTENEDORES <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href='<%=ResolveClientUrl("MANTENEDORES/CLUSTER") %>'>CLÚSTER</a></li>
+                                <li class="divider"></li>
+                            </ul>
+                        </li>
+
+
+                        <!-- =========================================-->
+                        <!-- MENU MANTENEDORES                         -->
+                        <!-- =========================================-->
+                        <%--<li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fas fa-sitemap"></i> &nbsp; ARCHIVOS <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href='<%=ResolveClientUrl("DOWNLOAD/ARCHIVO") %>'>DESCARGA DE ARCHIVOS</a></li>
+                                <li class="divider"></li>
+                            </ul>
+                        </li>--%>
+
+                        <!-- =========================================-->
+                        <!-- MENU AYUDA                               -->
+                        <!-- =========================================-->
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fas fa-sitemap"></i>&nbsp; LINK <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <asp:LinkButton ID="LinkButton2" runat="server" CssClass="" font="#FFFFFF" ToolTip="VIDEOS DE AYUDA" OnClick="btnLearning_Click">
+                                    <i class="fa fa-question-circle" aria-hidden="true"></i>&nbsp; AYUDA </asp:LinkButton>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <asp:LinkButton ID="LinkButton1" runat="server" CssClass="" font="#FFFFFF" ToolTip="SITIO WEB CONECTORES" OnClick="btnConector_Click">
+                                    <i class="fa fas fa-sitemap" aria-hidden="true"></i>&nbsp; CONECTORES </asp:LinkButton>
+                                </li>
+                                <li class="divider"></li>
+                            </ul>
+                        </li>
+
+                        <%--  <li>
+                            <asp:LinkButton ID="LinkButton2" runat="server" CssClass="" font="#FFFFFF" ToolTip="VIDEOS DE AYUDA" OnClick="btnLearning_Click">
+                          <i class="fa fa-question-circle" aria-hidden="true"></i>&nbsp; AYUDA </asp:LinkButton>
+                        </li>--%>
+                    </ul>
+                    <!-- ===============================================================================================================-->
+                    <!-- ===============================================================================================================-->
+                    <ul class="nav navbar-nav navbar-right">
+
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <asp:Label ID="LBL_Bienvenida" runat="server" Text=""></asp:Label>
+                                <b class="fa fa-angle-down"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href='<%=ResolveClientUrl("Login") %>'><i class="fa fa-fw fa-user"></i>Login</a></li>
+                                <li><a href='<%=ResolveClientUrl("CambioPassword") %>'><i class="fa fa-fw fa-cog"></i>Cambiar Password</a></li>
+                                <li class="divider"></li>
+                                <li><a id="A1" href="#" runat="server" onserverclick="Logout_Click"><i class="fa fa-fw fa-power-off"></i>Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <!-- ===============================================================================================================-->
+                    <!-- ===============================================================================================================-->
+                </div>
+            </div>
+        </nav>
+        <!-- ===========================================================================================================================-->
+        <!-- FIN NAVEGADOR                                                                                                              -->
+        <!-- ===========================================================================================================================-->
+
+
+        <!-- ===========================================================================================================================-->
+        <!-- CONTENEDOR                                                                                                                 -->
+        <!-- ===========================================================================================================================-->
+        <div class="container">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+        </div>
+        <!-- ===========================================================================================================================-->
+        <!-- FIN CONTENEDOR                                                                                                             -->
+        <!-- ===========================================================================================================================-->
+
+        <%--============================================================================================================================--%>
+        <%-- CONTENEDOR MODAL                                                                                                           --%>
+        <%--============================================================================================================================--%>
+        <asp:UpdatePanel runat="server" ID="UPDATE_MENSAJE" UpdateMode="Always">
+            <ContentTemplate>
+                <div id="LOG_MENSAJE_SERVER" runat="server" style="display: none;"></div>
+
+                <div class="modal fade" id="mostrarmodal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="basicModal" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">
+                                    <asp:Label ID="TituloModal" runat="server" Text=""></asp:Label>
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+
+                                <div id="LOG_MENSAJE_DIALOG">
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <div class="row">
+                                    <div class="col-sm-12 pull-right">
+                                        <a href="#" data-dismiss="modal" class="btn btn-danger">Cerrar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ContentTemplate>
+        </asp:UpdatePanel>
+        <%--============================================================================================================================--%>
+        <%-- FIN CONTENEDOR MODAL                                                                                                       --%>
+        <%--============================================================================================================================--%>
+
+        <asp:UpdateProgress ID="UpdateProgress2" runat="server">
+            <ProgressTemplate>
+                <div class="overlay">
+                    <div class="CenterPB" style="height: 60px; width: 60px;">
+                        <img id="Img1" runat="server" src="~/images/loading.gif" alt="Loading..." style="height: 70px; width: 70px" border="0" />
+                    </div>
+                </div>
+            </ProgressTemplate>
+        </asp:UpdateProgress>
+
+
+
+    </form>
+
+
+
+
+</body>
+</html>
+
